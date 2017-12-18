@@ -1,0 +1,19 @@
+.checklist-task:first-child{
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed #ddd;
+}
+
+.checklist-task::after{
+    color: #d66;
+    display: inline-block;
+    content: '✖'
+}
+
+.checklist--add-task {
+    border: 1px solid #bbb;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 3px;
+}

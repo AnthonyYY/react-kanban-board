@@ -1,0 +1,42 @@
+[
+    {
+        "id": 1,
+        "title": "Card one title",
+        "desc": "Card detailed description.",
+        "color": "#BD8D31",
+        "status": "todo",
+        "tasks": [
+            {
+                "id": 1,
+                "name": "Task one",
+                "done": true
+            },
+            {
+                "id": 2,
+                "name": "Task two",
+                "done": false
+            },
+            {
+                "id": 3,
+                "name": "Task three",
+                "done": false
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "title": "Card Two title",
+        "color": "#3A7E28",
+        "desc": "Card detailed description",
+        "status": "in-progress",
+        "tasks": []
+    },
+    {
+        "id": 3,
+        "title": "Card Three title",
+        "color": "#BD8D31",
+        "desc": "Card detailed description",
+        "status": "done",
+        "tasks": []
+    }
+]
