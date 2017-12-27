@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import KanbanBoard from './kanban-board';
-import logo from './logo.svg';
-import cardList from './data.json';
+import KanbanBoardContainer from './kanbanboard-container';
 
 class App extends Component {
   render() {
     return (
-      <KanbanBoard cards={cardList}/>
+      <KanbanBoardContainer />
     );
   }
 }
