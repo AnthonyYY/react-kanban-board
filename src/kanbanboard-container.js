@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import KanbanBoard from './kanban-board';
 import 'whatwg-fetch';
+import update from 'react-addons-update';
 
 const API_URL = 'http://kanbanapi.pro-react.com';
 const API_HEADERSS = {
@@ -25,15 +26,85 @@ class KanbanBoardContainer extends Component {
     }
 
     addTask(cardId, taskName){
+        let cardIndex = this.state.cards.findIndex( card => card.id === cardId );
+        let newTask = {
+            id: Date.now(),
+            name: taskName,
+            done: false
+        }
 
+        let nextState = update(this.state.cards,{
+            [cardIndex]: {
+                tasks: {
+                    $push: [newTask]
+                }
+            }
+        });
+
+        this.setState({
+            cards: nextState
+        });
+
+        fetch(`${API_URL}/cards/${cardId}/tasks`, {
+            method: 'post',
+            headers: API_HEADERSS,
+            body: JSON.stringify(newTask)
+        })
+        .then(res => res.json())
+        .then(resp => {
+            newTask.id = resp.id
+            this.setState({
+                cards: nextState
+            });
+        })
     }
 
-    deleteTask(cardId, taskId, taskIndx){
-
+    deleteTask(cardId, taskId, taskIndex){
+        let cardIndex = this.state.cards.findIndex( card => card.id === cardId );
+        let newCards = update(this.state.cards,{
+            [cardIndex]: {
+                tasks: { $splice: [[taskIndex,1]] }
+            }
+        });
+        this.setState({
+            cards: newCards
+        });
+        fetch(`${API_URL}/cards/${cardId}/tasks/${taskId}`,{
+            method: 'delete',
+            headers: API_HEADERSS
+        });
     }
 
     toggleTask(cardId, taskId, taskIndex){
+        let cardIndex = this.state.cards.findIndex( card => card.id === cardId );
+        let newDoneValue;
 
+        let nextState = update(this.state.cards, {
+            [cardIndex]: {
+                tasks: {
+                    [taskIndex]: {
+                        done: {
+                            $apply: (done) => {
+                                newDoneValue = !done;
+                                return newDoneValue;
+                            }
+                        }
+                    }
+                }      
+            }
+        });
+
+        this.setState({
+            cards: nextState
+        });
+
+        fetch(`${API_URL}/cards/${cardId}/tasks/${taskId}`, {
+            method: 'put',
+            headers: API_HEADERSS,
+            body: JSON.stringify({
+                done: newDoneValue
+            })
+        })
     }
 
     render(){

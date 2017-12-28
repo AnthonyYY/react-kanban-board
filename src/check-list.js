@@ -16,10 +16,10 @@ class CheckList extends Component {
             <li className="checklist-task" key={task.id}>
                 <input 
                     type="checkbox" 
-                    onChange={ () => callbacks.toggle(task.id, index, this.props.cardId) }
+                    onChange={ () => callbacks.toggle(this.props.cardId, task.id, index) }
                     defaultChecked={task.done}/>
                 {task.name}{' '}
-                <a href="#" className="checklist-task--remove" onClick={ () => callbacks.delete(task.id, index, this.props.cardId) }></a>
+                <a href="#" className="checklist-task--remove" onClick={ () => callbacks.delete(this.props.cardId, task.id, index) }></a>
             </li>
         ));
         return (
