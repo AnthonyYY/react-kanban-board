@@ -20,12 +20,17 @@ class KanbanBoardContainer extends Component {
     componentDidMount(){
         fetch(`${API_URL}/cards`, {headers: API_HEADERSS})
         .then( res => res.json() )
-        .then( cards => this.setState({
-            cards: cards
-        }) );
+        .then( cards => {
+            this.setState({
+                cards: cards
+            });
+            window.state = this.state;
+        } );
     }
 
     addTask(cardId, taskName){
+
+        let prevState = this.state;
         let cardIndex = this.state.cards.findIndex( card => card.id === cardId );
         let newTask = {
             id: Date.now(),
@@ -50,16 +55,24 @@ class KanbanBoardContainer extends Component {
             headers: API_HEADERSS,
             body: JSON.stringify(newTask)
         })
-        .then(res => res.json())
+        .then(res => {
+            if(res.ok){
+                return res.json();
+            }else{
+                throw new Error('server response wasn\'t ok');
+            }
+        })
         .then(resp => {
             newTask.id = resp.id
             this.setState({
                 cards: nextState
             });
         })
+        .catch( err => this.setState(prevState));
     }
 
     deleteTask(cardId, taskId, taskIndex){
+        let prevState = this.state;
         let cardIndex = this.state.cards.findIndex( card => card.id === cardId );
         let newCards = update(this.state.cards,{
             [cardIndex]: {
@@ -72,10 +85,21 @@ class KanbanBoardContainer extends Component {
         fetch(`${API_URL}/cards/${cardId}/tasks/${taskId}`,{
             method: 'delete',
             headers: API_HEADERSS
-        });
+        })
+        .then( res => {
+            if(!res.ok){
+                throw new Error("Server response wasn't OK");
+            }
+        } )
+        .catch( err => {
+            console.error(err);
+            console.log(prevState);
+            this.setState(prevState);
+        } );
     }
 
     toggleTask(cardId, taskId, taskIndex){
+        let prevState = this.state;
         let cardIndex = this.state.cards.findIndex( card => card.id === cardId );
         let newDoneValue;
 
@@ -105,6 +129,15 @@ class KanbanBoardContainer extends Component {
                 done: newDoneValue
             })
         })
+        .then( res => {
+            if(!res.ok){
+                throw new Error('Server response wasn\'t OK');
+            }
+        } )
+        .catch( err => {
+            console.error(err);
+            this.setState(prevState);
+        } )
     }
 
     render(){
