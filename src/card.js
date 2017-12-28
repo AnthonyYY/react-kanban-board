@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import marked from 'marked';
 import Checklist from './check-list';
+import PropTypes from 'prop-types';
 import './card.css';
 
 class Card extends Component {
@@ -22,8 +23,11 @@ class Card extends Component {
         if(this.state.showDetails){
             cardDetails = (
                 <div className="card-detail">
-                    <span dangerouslySetInnerHTML={{__html: marked(this.props.desc)}}></span>
-                    <Checklist cardId={this.props.id} tasks={this.props.tasks} />
+                    <span dangerouslySetInnerHTML={{__html: marked(this.props.description)}}></span>
+                    <Checklist 
+                        cardId={this.props.id}
+                        tasks={this.props.tasks} 
+                        taskCallbacks={this.props.taskCallbacks} />
                 </div>
             );
         }
@@ -42,3 +46,12 @@ class Card extends Component {
 }
 
 export default Card;
+
+Card.propTypes = {
+    id: PropTypes.number,
+    title: PropTypes.string,
+    descriotion: PropTypes.string,
+    color: PropTypes.string,
+    tasks: PropTypes.arrayOf(PropTypes.object),
+    taskCallbacks: PropTypes.object
+}
