@@ -8,6 +8,7 @@ class List extends Component {
         const cards = this.props.cards.map( card => <Card 
             key={card.id} 
             taskCallbacks={this.props.taskCallbacks}
+            cardCallbacks={this.props.cardCallbacks}
             {...card} /> 
         );
 

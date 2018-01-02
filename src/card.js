@@ -2,7 +2,24 @@ import React, {Component} from 'react';
 import marked from 'marked';
 import Checklist from './check-list';
 import PropTypes from 'prop-types';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import { DragSource } from "react-dnd";
+import constants from './constants';
 import './card.css';
+
+const cardDragSpec = {
+    beginDrag(props){
+        return {
+            id: 14
+        }
+    }
+}
+
+let collectDrag = (connect, monitor) => {
+    return {
+        connectDragSource: connect.dragSource()
+    }
+}
 
 class Card extends Component {
     constructor(){
@@ -39,7 +56,12 @@ class Card extends Component {
                     onClick={ this.toggleDetail.bind(this) }>
                     {this.props.title}
                 </div>
-                {cardDetails}
+                <ReactCSSTransitionGroup 
+                    transitionName="toggle"
+                    transitionEnterTimeout={300}
+                    transitionLeaveTimeout={300}>
+                    {cardDetails}
+                </ReactCSSTransitionGroup>
             </div>
         );
     }
